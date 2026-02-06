@@ -26,7 +26,9 @@ import {
   User,
   Eye,
   EyeOff,
-  LogOut
+  LogOut,
+  Mail,
+  UserPlus
 } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
@@ -73,11 +75,15 @@ function App() {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(true);
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState('');
 
   // Store auth header for API calls
   const [authHeader, setAuthHeader] = useState('');
@@ -160,13 +166,71 @@ function App() {
     }
   };
 
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setSignupSuccess('');
+    setLoginLoading(true);
+
+    // Frontend validation
+    if (!username.trim() || !email.trim() || !password || !confirmPassword) {
+      setLoginError('All fields are required');
+      setLoginLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setLoginError('Passwords do not match');
+      setLoginLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setLoginError('Password must be at least 6 characters');
+      setLoginLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${API_BASE}/api/register/`, {
+        username: username.trim(),
+        email: email.trim(),
+        password,
+        confirm_password: confirmPassword
+      });
+
+      if (response.status === 201) {
+        setSignupSuccess('Account created successfully! Please login.');
+        setAuthMode('login');
+        setPassword('');
+        setConfirmPassword('');
+        setEmail('');
+      }
+    } catch (err) {
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const errorMessages = Object.values(errors).join('. ');
+        setLoginError(errorMessages);
+      } else {
+        setLoginError('Registration failed. Please try again.');
+      }
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     setShowLoginModal(true);
+    setAuthMode('login');
     setAuthHeader('');
     setUsername('');
+    setEmail('');
     setPassword('');
+    setConfirmPassword('');
     setStats(null);
+    setLoginError('');
+    setSignupSuccess('');
     localStorage.removeItem('authHeader');
   };
 
@@ -204,21 +268,56 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
 
-      {/* Login Modal Overlay */}
+      {/* Login/Signup Modal Overlay */}
       {showLoginModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
           <Card className="w-full max-w-md mx-4 shadow-2xl">
             <CardHeader className="text-center space-y-4">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                <Lock className="h-8 w-8 text-primary" />
+                {authMode === 'login' ? <Lock className="h-8 w-8 text-primary" /> : <UserPlus className="h-8 w-8 text-primary" />}
               </div>
               <div>
-                <CardTitle className="text-2xl">Welcome Back</CardTitle>
-                <CardDescription>Please enter your credentials to continue</CardDescription>
+                <CardTitle className="text-2xl">{authMode === 'login' ? 'Welcome Back' : 'Create Account'}</CardTitle>
+                <CardDescription>
+                  {authMode === 'login' ? 'Enter your credentials to continue' : 'Fill in the details to get started'}
+                </CardDescription>
+              </div>
+
+              {/* Auth Mode Tabs */}
+              <div className="flex rounded-lg bg-muted p-1">
+                <button
+                  type="button"
+                  onClick={() => { setAuthMode('login'); setLoginError(''); }}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${authMode === 'login'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setAuthMode('signup'); setLoginError(''); setSignupSuccess(''); }}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${authMode === 'signup'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  Sign Up
+                </button>
               </div>
             </CardHeader>
+
             <CardContent>
-              <form onSubmit={handleLogin} className="space-y-4">
+              {/* Success Message */}
+              {signupSuccess && (
+                <div className="mb-4 p-3 text-sm text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-800">
+                  {signupSuccess}
+                </div>
+              )}
+
+              <form onSubmit={authMode === 'login' ? handleLogin : handleSignup} className="space-y-4">
+                {/* Username */}
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <div className="relative">
@@ -235,6 +334,26 @@ function App() {
                   </div>
                 </div>
 
+                {/* Email - Only for Signup */}
+                {authMode === 'signup' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Password */}
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
@@ -258,6 +377,26 @@ function App() {
                   </div>
                 </div>
 
+                {/* Confirm Password - Only for Signup */}
+                {authMode === 'signup' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        id="confirmPassword"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
                 {loginError && (
                   <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-lg border border-destructive/20">
                     {loginError}
@@ -268,10 +407,10 @@ function App() {
                   {loginLoading ? (
                     <div className="flex items-center gap-2">
                       <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                      Logging in...
+                      {authMode === 'login' ? 'Logging in...' : 'Creating account...'}
                     </div>
                   ) : (
-                    'Login'
+                    authMode === 'login' ? 'Login' : 'Create Account'
                   )}
                 </Button>
               </form>

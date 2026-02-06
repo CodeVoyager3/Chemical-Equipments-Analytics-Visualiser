@@ -12,7 +12,7 @@ from api_client import APIClient
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Chemical Visualizer - Desktop")
+        self.setWindowTitle("Chemical Equipment Analytics Dashboard")
         self.resize(1200, 800)
         
         # Initialize API client
@@ -67,4 +67,3 @@ class MainWindow(QMainWindow):
                 "Authentication is required to use this application."
             )
             self.close()
-

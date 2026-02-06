@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-    QLineEdit, QPushButton, QMessageBox, QFrame
+    QLineEdit, QPushButton, QMessageBox, QFrame, QWidget
 )
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPalette, QColor
 from theme import Theme
 
 
@@ -15,109 +15,143 @@ class LoginDialog(QDialog):
         self.api_client = api_client
         self.authenticated = False
         
-        self.setWindowTitle("Login - Chemical Visualizer")
-        self.setFixedSize(400, 350)
+        self.setWindowTitle("Login - Chemical Equipment Analytics Dashboard")
+        self.setFixedSize(440, 500)
         self.setModal(True)
         self.setup_ui()
         
     def setup_ui(self):
-        self.setStyleSheet(f"""
-            QDialog {{
-                background-color: {Theme.BACKGROUND};
-            }}
-            QLabel {{
-                color: {Theme.FOREGROUND};
-                background: transparent;
-            }}
+        # Set base background
+        self.setStyleSheet(f"background-color: {Theme.BACKGROUND};")
+        
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(50, 40, 50, 40)
+        layout.setSpacing(12)
+        
+        # Spacer at top
+        layout.addSpacing(10)
+        
+        # Logo Circle
+        logo_container = QWidget()
+        logo_container.setFixedSize(80, 80)
+        logo_container.setStyleSheet(f"""
+            background-color: {Theme.PRIMARY};
+            border-radius: 40px;
+        """)
+        logo_layout = QVBoxLayout(logo_container)
+        logo_layout.setContentsMargins(0, 0, 0, 0)
+        
+        logo_text = QLabel("🔒")
+        logo_text.setAlignment(Qt.AlignCenter)
+        logo_text.setStyleSheet("font-size: 32px; background: transparent;")
+        logo_layout.addWidget(logo_text)
+        
+        # Center logo
+        logo_row = QHBoxLayout()
+        logo_row.addStretch()
+        logo_row.addWidget(logo_container)
+        logo_row.addStretch()
+        layout.addLayout(logo_row)
+        
+        layout.addSpacing(20)
+        
+        # Title - explicit dark color
+        title_label = QLabel("Welcome Back")
+        title_label.setAlignment(Qt.AlignCenter)
+        font = QFont("Segoe UI", 22)
+        font.setBold(True)
+        title_label.setFont(font)
+        title_label.setStyleSheet("color: #171717; background: transparent;")
+        layout.addWidget(title_label)
+        
+        # Subtitle
+        subtitle_label = QLabel("Sign in to access the Analytics Dashboard")
+        subtitle_label.setAlignment(Qt.AlignCenter)
+        subtitle_label.setStyleSheet("color: #707070; font-size: 13px; background: transparent;")
+        layout.addWidget(subtitle_label)
+        
+        layout.addSpacing(25)
+        
+        # Username label
+        username_label = QLabel("Username")
+        username_label.setStyleSheet("color: #171717; font-weight: bold; font-size: 13px; background: transparent;")
+        layout.addWidget(username_label)
+        
+        # Username input
+        self.username_input = QLineEdit()
+        self.username_input.setPlaceholderText("Enter your username")
+        self.username_input.setMinimumHeight(44)
+        self.username_input.setStyleSheet(f"""
             QLineEdit {{
-                background-color: {Theme.CARD};
-                color: {Theme.FOREGROUND};
-                border: 1px solid {Theme.BORDER};
+                background-color: #f6f6f6;
+                color: #171717;
+                border: 1px solid #dfdfdf;
                 border-radius: 6px;
-                padding: 10px;
+                padding: 10px 12px;
                 font-size: 14px;
             }}
             QLineEdit:focus {{
                 border-color: {Theme.PRIMARY};
             }}
         """)
+        layout.addWidget(self.username_input)
         
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(40, 40, 40, 40)
-        layout.setSpacing(20)
+        layout.addSpacing(8)
         
-        # Header
-        header_frame = QFrame()
-        header_layout = QVBoxLayout(header_frame)
-        header_layout.setContentsMargins(0, 0, 0, 0)
-        
-        # Icon/Title
-        icon_label = QLabel("🔐")
-        icon_label.setAlignment(Qt.AlignCenter)
-        icon_label.setStyleSheet("font-size: 40px;")
-        
-        title_label = QLabel("Welcome Back")
-        title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet(f"""
-            font-size: 24px;
-            font-weight: bold;
-            color: {Theme.FOREGROUND};
-        """)
-        
-        subtitle_label = QLabel("Please enter your credentials to continue")
-        subtitle_label.setAlignment(Qt.AlignCenter)
-        subtitle_label.setStyleSheet(f"color: {Theme.BORDER}; font-size: 12px;")
-        
-        header_layout.addWidget(icon_label)
-        header_layout.addWidget(title_label)
-        header_layout.addWidget(subtitle_label)
-        
-        layout.addWidget(header_frame)
-        
-        # Username field
-        username_label = QLabel("Username")
-        username_label.setStyleSheet("font-weight: bold; font-size: 12px;")
-        self.username_input = QLineEdit()
-        self.username_input.setPlaceholderText("Enter your username")
-        
-        # Password field
+        # Password label
         password_label = QLabel("Password")
-        password_label.setStyleSheet("font-weight: bold; font-size: 12px;")
+        password_label.setStyleSheet("color: #171717; font-weight: bold; font-size: 13px; background: transparent;")
+        layout.addWidget(password_label)
+        
+        # Password input
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Enter your password")
         self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setMinimumHeight(44)
+        self.password_input.setStyleSheet(f"""
+            QLineEdit {{
+                background-color: #f6f6f6;
+                color: #171717;
+                border: 1px solid #dfdfdf;
+                border-radius: 6px;
+                padding: 10px 12px;
+                font-size: 14px;
+            }}
+            QLineEdit:focus {{
+                border-color: {Theme.PRIMARY};
+            }}
+        """)
+        layout.addWidget(self.password_input)
+        
+        layout.addSpacing(25)
         
         # Login button
         self.login_btn = QPushButton("Login")
+        self.login_btn.setMinimumHeight(48)
+        self.login_btn.setCursor(Qt.PointingHandCursor)
         self.login_btn.setStyleSheet(f"""
             QPushButton {{
                 background-color: {Theme.PRIMARY};
-                color: #ffffff;
+                color: #1e2723;
                 border-radius: 6px;
-                padding: 12px;
                 font-weight: bold;
-                font-size: 14px;
+                font-size: 15px;
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #094b5c;
+                background-color: #5fd69a;
             }}
             QPushButton:pressed {{
-                background-color: #052a35;
+                background-color: #4bc98a;
             }}
         """)
         self.login_btn.clicked.connect(self.attempt_login)
+        layout.addWidget(self.login_btn)
         
-        # Connect Enter key to login
+        # Connect Enter key
         self.password_input.returnPressed.connect(self.attempt_login)
         self.username_input.returnPressed.connect(self.focus_password)
         
-        layout.addWidget(username_label)
-        layout.addWidget(self.username_input)
-        layout.addWidget(password_label)
-        layout.addWidget(self.password_input)
-        layout.addSpacing(10)
-        layout.addWidget(self.login_btn)
         layout.addStretch()
         
     def focus_password(self):
@@ -131,15 +165,12 @@ class LoginDialog(QDialog):
             QMessageBox.warning(self, "Validation Error", "Please enter both username and password.")
             return
         
-        # Test credentials by making a simple authenticated request
         self.login_btn.setText("Logging in...")
         self.login_btn.setEnabled(False)
         
         try:
-            # Store credentials in API client for future requests
             self.api_client.set_credentials(username, password)
             
-            # Test authentication with a simple request
             if self.api_client.test_auth():
                 self.authenticated = True
                 self.accept()
@@ -154,5 +185,4 @@ class LoginDialog(QDialog):
             self.login_btn.setEnabled(True)
     
     def get_credentials(self):
-        """Return the entered credentials as a tuple."""
         return (self.username_input.text().strip(), self.password_input.text())

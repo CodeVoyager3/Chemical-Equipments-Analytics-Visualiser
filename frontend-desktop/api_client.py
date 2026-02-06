@@ -39,7 +39,6 @@ class APIClient:
         """
         try:
             # Try to access the upload endpoint with OPTIONS or a simple GET
-            # For now, we'll do a HEAD request or just verify we don't get 401
             test_url = f"{self.base_url}/api/upload/"
             response = requests.options(test_url, auth=self.get_auth(), timeout=10)
             # If we get anything other than 401, credentials are likely valid
@@ -51,7 +50,7 @@ class APIClient:
     def upload_csv(self, file_path):
         """
         Uploads a CSV file to the /api/upload/ endpoint.
-        Returns the JSON response containing statistics.
+        Returns the JSON response containing statistics and batch_id.
         """
         upload_url = f"{self.base_url}/api/upload/"
         
@@ -70,3 +69,59 @@ class APIClient:
             print(f"General Error: {e}")
             raise e
 
+    def get_recent_uploads(self):
+        """
+        Fetch the last 5 recent uploads from the server.
+        Returns a list of upload data with id, filename, uploaded_at, equipment_count.
+        """
+        upload_url = f"{self.base_url}/api/upload/"
+        
+        try:
+            response = requests.get(upload_url, auth=self.get_auth(), timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"API Request Error: {e}")
+            return []
+        except Exception as e:
+            print(f"General Error: {e}")
+            return []
+
+    def get_batch_stats(self, batch_id):
+        """
+        Fetch statistics for a specific batch.
+        Returns the batch statistics including type distribution.
+        """
+        stats_url = f"{self.base_url}/api/batch/{batch_id}/"
+        
+        try:
+            response = requests.get(stats_url, auth=self.get_auth(), timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"API Request Error: {e}")
+            raise e
+
+    def download_pdf(self, batch_id, save_path):
+        """
+        Download PDF report for a specific batch.
+        Saves the PDF to the specified path.
+        Returns True on success, False on failure.
+        """
+        pdf_url = f"{self.base_url}/api/export-pdf/{batch_id}/"
+        
+        try:
+            response = requests.get(pdf_url, auth=self.get_auth(), timeout=30, stream=True)
+            response.raise_for_status()
+            
+            with open(save_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            
+            return True
+        except requests.exceptions.RequestException as e:
+            print(f"PDF Download Error: {e}")
+            raise e
+        except Exception as e:
+            print(f"General Error: {e}")
+            raise e

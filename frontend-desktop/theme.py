@@ -1,45 +1,49 @@
 class Theme:
     """
-    Solarized Light Theme Colors
-    Extracted from frontend-react/src/index.css (Root variables)
+    React Light Mode Theme Colors
+    Matches frontend-react/src/index.css (Root variables)
     """
-    # Base Colors
-    BACKGROUND = "#fdf6e3" # Cream
-    FOREGROUND = "#073642" # Dark Blue
+    # Base Colors (React Light Mode)
+    BACKGROUND = "#fcfcfc"  # White
+    FOREGROUND = "#171717"  # Near Black
     
     # Surfaces
-    CARD = "#eee8d5"       # Beige
-    CARD_FOREGROUND = "#073642"
+    CARD = "#fcfcfc"        # White
+    CARD_FOREGROUND = "#171717"
     
-    # Sidebar (Matches background in light mode usually, or slightly darker)
-    SIDEBAR_BG = "#fdf6e3"
-    SIDEBAR_FG = "#586e75"
-    SIDEBAR_ACCENT = "#2aa198"
-    SIDEBAR_ACCENT_FG = "#ffffff"
+    # Sidebar
+    SIDEBAR_BG = "#fcfcfc"
+    SIDEBAR_FG = "#707070"
+    SIDEBAR_ACCENT = "#72e3ad"
+    SIDEBAR_ACCENT_FG = "#1e2723"
     
-    # Accents & Primary
-    PRIMARY = "#d33682"    # Magenta
-    PRIMARY_FG = "#ffffff"
-    SECONDARY = "#2aa198"  # Cyan
-    SECONDARY_FG = "#ffffff"
-    ACCENT = "#cb4b16"     # Orange
-    ACCENT_FG = "#ffffff"
+    # Accents & Primary (Mint Green)
+    PRIMARY = "#72e3ad"     # Mint Green
+    PRIMARY_FG = "#1e2723"
+    SECONDARY = "#fdfdfd"
+    SECONDARY_FG = "#171717"
+    ACCENT = "#ededed"
+    ACCENT_FG = "#202020"
     
     # Borders & Inputs
-    BORDER = "#839496"
-    INPUT = "#839496"
+    BORDER = "#dfdfdf"
+    INPUT = "#f6f6f6"
+    MUTED = "#707070"
     
-    # Charts (Solarized Palette)
-    CHART_1 = "#268bd2"  # Blue
-    CHART_2 = "#2aa198"  # Cyan
-    CHART_3 = "#d33682"  # Magenta
-    CHART_4 = "#cb4b16"  # Orange
-    CHART_5 = "#dc322f"  # Red
-    CHART_6 = "#859900"  # Green
-    CHART_7 = "#b58900"  # Yellow
-    CHART_8 = "#6c71c4"  # Violet
-    CHART_9 = "#002b36"  # Dark Blue
-    CHART_10 = "#93a1a1" # Grey
+    # Destructive
+    DESTRUCTIVE = "#ca3214"
+    
+    # Charts (React Palette)
+    CHART_1 = "#72e3ad"  # Mint Green
+    CHART_2 = "#3b82f6"  # Blue
+    CHART_3 = "#8b5cf6"  # Purple
+    CHART_4 = "#f59e0b"  # Amber
+    CHART_5 = "#10b981"  # Emerald
+    CHART_6 = "#ef4444"  # Red
+    CHART_7 = "#06b6d4"  # Cyan
+    CHART_8 = "#ec4899"  # Pink
+    CHART_9 = "#6366f1"  # Indigo
+    CHART_10 = "#84cc16" # Lime
 
     # Font
     FONT_FAMILY = "Segoe UI"

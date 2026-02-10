@@ -42,7 +42,7 @@ const AuthLayout = ({ children, title, subtitle }) => {
                             Chemical Equipment
                         </h1>
                         <p className="text-muted-foreground font-medium text-lg">
-                            Analytics Dashboard
+                            Parameter Visualizer
                         </p>
                     </div>
                 </div>

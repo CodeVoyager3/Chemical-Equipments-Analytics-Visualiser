@@ -15,7 +15,7 @@ class LoginDialog(QDialog):
         self.api_client = api_client
         self.authenticated = False
         
-        self.setWindowTitle("Login - Chemical Equipment Analytics Dashboard")
+        self.setWindowTitle("Login - Chemical Equipment Parameter Visualizer")
         self.setFixedSize(440, 500)
         self.setModal(True)
         self.setup_ui()
@@ -65,7 +65,7 @@ class LoginDialog(QDialog):
         layout.addWidget(title_label)
         
         # Subtitle
-        subtitle_label = QLabel("Sign in to access the Analytics Dashboard")
+        subtitle_label = QLabel("Sign in to access the Parameter Visualizer")
         subtitle_label.setAlignment(Qt.AlignCenter)
         subtitle_label.setStyleSheet("color: #707070; font-size: 13px; background: transparent;")
         layout.addWidget(subtitle_label)

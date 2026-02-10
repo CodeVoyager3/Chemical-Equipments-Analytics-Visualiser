@@ -1,4 +1,4 @@
-# Chemical Equipments' Analytics Visualizer ⚗️📊
+# Chemical Equipment Parameter Visualizer ⚗️📊
 
 ![Project Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 ![Tech Stack](https://img.shields.io/badge/Stack-Full%20Stack-blue?style=for-the-badge)

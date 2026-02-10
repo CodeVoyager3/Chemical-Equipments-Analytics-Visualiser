@@ -160,8 +160,8 @@ const Dashboard = ({ authHeader, onLogout, darkMode, toggleDarkMode }) => {
                             <img src="/image.png" alt="Logo" className="h-6 w-6 sm:h-8 sm:w-8 object-contain" />
                         </div>
                         <h1 className="text-sm sm:text-lg font-bold tracking-tight truncate">
-                            <span className="hidden sm:inline">Chemical Equipment Analytics Dashboard</span>
-                            <span className="sm:hidden">Analytics Dashboard</span>
+                            <span className="hidden sm:inline">Chemical Equipment Parameter Visualizer</span>
+                            <span className="sm:hidden">Parameter Visualizer</span>
                         </h1>
                     </div>
 
@@ -256,7 +256,7 @@ const Dashboard = ({ authHeader, onLogout, darkMode, toggleDarkMode }) => {
 
                         <div className="relative z-10 space-y-3 sm:space-y-4">
                             <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-foreground">
-                                Chemical Equipment Analytics Dashboard
+                                Chemical Equipment Parameter Visualizer
                             </h2>
                             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                                 Upload a CSV file to generate summary analytics including total equipment count, average operating values, and equipment type distribution.
@@ -538,7 +538,7 @@ const Dashboard = ({ authHeader, onLogout, darkMode, toggleDarkMode }) => {
 
             {/* Footer */}
             <footer className="text-center py-4 sm:py-6 text-xs sm:text-sm text-muted-foreground border-t border-border bg-background/50 backdrop-blur-sm px-4">
-                <p>Chemical Equipment Analytics Dashboard • Built with React & Shadcn UI</p>
+                <p>Chemical Equipment Parameter Visualizer • Built with React & Shadcn UI</p>
             </footer>
         </div>
     );

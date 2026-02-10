@@ -93,7 +93,7 @@ class Dashboard(QWidget):
         
         # Text Content
         text_layout = QVBoxLayout()
-        title = QLabel("Chemical Equipment Analytics Dashboard")
+        title = QLabel("Chemical Equipment Parameter Visualizer")
         title.setStyleSheet(f"font-size: 26px; font-weight: bold; color: {Theme.FOREGROUND}; background: transparent; border: none;")
         
         subtitle = QLabel("Upload a CSV file to generate summary analytics including total equipment count, average operating values, and equipment type distribution.")

@@ -12,7 +12,7 @@ from api_client import APIClient
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Chemical Equipment Analytics Dashboard")
+        self.setWindowTitle("Chemical Equipment Parameter Visualizer")
         self.resize(1200, 800)
         
         # Initialize API client
